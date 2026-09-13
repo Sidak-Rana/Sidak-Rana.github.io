@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sidak Rana</title>
+<meta name="description" content="Sidak Rana — computer science student at Stony Brook University. Software, embedded hardware, and tools for markets.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F8F7F4;
+    --navy:#14233A;
+    --navy-text:#EEF0F3;
+    --navy-meta:#A9B3C2;
+    --text:#24272B;
+    --meta:#6A6E74;
+    --rule:#DDDBD5;
+    --burgundy:#7A1F2E;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--text);
+    font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+    font-size:17.5px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .sans{font-family:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif}
+
+  a{color:var(--burgundy);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+  a:hover{text-decoration-thickness:2px}
+  a:focus-visible{outline:2px solid var(--burgundy);outline-offset:3px;border-radius:2px}
+
+  .wrap{width:min(100% - 2.5rem,66rem);margin-inline:auto}
+
+  /* masthead */
+  .masthead{background:var(--navy);color:var(--navy-text);padding:clamp(2.5rem,6vw,4.5rem) 0}
+  .masthead a{color:var(--navy-text)}
+  .masthead a:focus-visible{outline-color:var(--navy-text)}
+  .mast-grid{display:grid;grid-template-columns:1fr;gap:2rem;align-items:center}
+  @media (min-width:700px){.mast-grid{grid-template-columns:auto 1fr;gap:3rem}}
+  .photo{width:min(11.5rem,40vw);aspect-ratio:4/5;object-fit:cover;object-position:center top;display:block;background:#1E2F4A}
+  h1{font-size:clamp(2.4rem,5.5vw,3.6rem);font-weight:600;line-height:1.05;letter-spacing:-.02em;margin:0 0 .6rem}
+  .one-line{font-size:clamp(1.1rem,2.2vw,1.3rem);line-height:1.45;max-width:36ch;margin:0 0 1.1rem}
+  .mast-meta{color:var(--navy-meta);font-size:.95rem;margin:0 0 1.4rem}
+  .links{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;padding:0;margin:0;list-style:none;font-size:.98rem}
+
+  /* work */
+  main{padding:0 0 1rem}
+  section{padding:clamp(2.4rem,5vw,3.6rem) 0}
+  section + section{border-top:1px solid var(--rule)}
+  h2{font-size:1.5rem;font-weight:600;letter-spacing:-.01em;margin:0 0 2rem}
+
+  .project{
+    display:grid;grid-template-columns:1fr;gap:1.4rem 3rem;align-items:start;
+    padding:0 0 3rem;
+  }
+  .project:last-child{padding-bottom:0}
+  @media (min-width:820px){.project{grid-template-columns:7fr 5fr}}
+
+  .shots{display:grid;gap:.9rem}
+  .shots img{width:100%;height:auto;display:block;border:1px solid var(--rule)}
+  .shots.pair{grid-template-columns:1fr 1fr}
+  @media (max-width:480px){.shots.pair{grid-template-columns:1fr}}
+
+  h3{font-size:1.25rem;font-weight:600;margin:0 0 .2rem}
+  .meta{color:var(--meta);font-size:.95rem;margin:0 0 .8rem}
+  .project p{margin:0 0 .75rem;max-width:56ch}
+  .project p:last-child{margin-bottom:0}
+  .project .links{margin-top:.9rem;font-size:.95rem}
+
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.88em;background:#EDEBE6;padding:.05em .3em;border-radius:2px}
+
+  /* short sections */
+  .prose p{max-width:64ch;margin:0 0 .8rem}
+  .prose p:last-child{margin-bottom:0}
+
+  /* footer */
+  footer{background:var(--navy);color:var(--navy-text);padding:2.6rem 0}
+  footer a{color:var(--navy-text)}
+  footer p{margin:0 0 1rem;max-width:60ch}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap mast-grid">
+    <img class="photo" src="assets/photo.jpg" alt="Sidak Rana" width="184" height="230">
+    <div>
+      <h1>Sidak Rana</h1>
+      <p class="one-line">
+        Computer science student at Stony Brook University. I build software,
+        embedded hardware, and tools for markets.
+      </p>
+      <p class="mast-meta sans">
+        Stony Brook, NY. Class of 2029. Seeking a Summer 2027 internship in
+        software, embedded systems, or fintech.
+      </p>
+      <ul class="links sans">
+        <li><a href="mailto:ranasidak@gmail.com">ranasidak@gmail.com</a></li>
+        <li><a href="https://github.com/Sidak-Rana">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/srana907">LinkedIn</a></li>
+        <li><a href="assets/Sidak_Rana_Resume.pdf">Resume</a></li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section id="work">
+  <h2>Work</h2>
+
+  <article class="project">
+    <div class="shots">
+      <img src="assets/dashboard.png" alt="Stock Portfolio Dashboard — table view with cost basis, total value, and top and bottom performers" width="974" height="637">
+    </div>
+    <div>
+      <h3>Stock Portfolio Dashboard</h3>
+      <p class="meta sans">June 2026. Python, Streamlit, pandas, Plotly, yfinance.</p>
+      <p>
+        Live portfolio tracking: gain/loss, percent return, and total value
+        across holdings, with a returns view per ticker and a distribution
+        view showing sector allocation and a correlation heatmap.
+      </p>
+      <p>
+        Prices fall back through <code>currentPrice</code>,
+        <code>regularMarketPrice</code>, and <code>navPrice</code>, so the
+        app keeps working when yfinance returns partial data. Deployed on
+        Streamlit Cloud; a push to the tracked branch redeploys it.
+      </p>
+      <ul class="links sans">
+        <li><a href="https://portfolio-dashboard-app.streamlit.app">Live app</a></li>
+        <li><a href="https://github.com/Sidak-Rana/Stock-Portfolio-Dashboard">Source</a></li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="project">
+    <div class="shots pair">
+      <img src="assets/clock-board.jpg" alt="The clock's circuit board on the bench, with the ATmega4809 and seven-segment display mounted" width="800" height="804">
+      <img src="assets/clock.jpg" alt="The finished clock in its enclosure, reading 5:00" width="800" height="600">
+    </div>
+    <div>
+      <h3>Embedded Digital Clock</h3>
+      <p class="meta sans">Jan–Apr 2026. C, AVR assembly, ATmega4809.</p>
+      <p>
+        Soldered and assembled the board, then wrote the firmware in C:
+        a multiplexed seven-segment display, an RTC, 24-to-12-hour
+        conversion, and button-driven hour and minute setting.
+      </p>
+      <p>
+        A set-minutes loop was being skipped when the button was still held
+        from the previous press. Fixed by waiting for release before
+        advancing state.
+      </p>
+    </div>
+  </article>
+
+  <article class="project">
+    <div class="shots"></div>
+    <div>
+      <h3>Stock Report Generator</h3>
+      <p class="meta sans">2024, with a partner. Python.</p>
+      <p>
+        Takes a ticker and produces a PDF report: historical price table,
+        color-coded price chart, and recent headlines.
+      </p>
+    </div>
+  </article>
+</section>
+
+<section id="also" class="prose">
+  <h2>Also</h2>
+  <p>
+    I'm Secretary of Brook Bhangra and a core organizer of Brook Naal
+    Bhangra 2027, Stony Brook's first intercollegiate bhangra competition
+    — two days, eight competing teams. I own records and scoring and built
+    the application and verification workflow the e-board runs on. I also
+    dance with the team.
+  </p>
+  <p>
+    B.S. Computer Science, minor in Finance, Stony Brook University.
+    Dean's List both semesters so far. Google AI Professional Certificate, 2026.
+  </p>
+  <p>
+    From New Hyde Park, New York. English and Punjabi; working Spanish and
+    Hindi. Outside of school I lift, run, and play Spikeball.
+  </p>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Hiring for Summer 2027, or want to talk embedded systems or markets? Get in touch.</p>
+    <ul class="links sans">
+      <li><a href="mailto:ranasidak@gmail.com">ranasidak@gmail.com</a></li>
+      <li><a href="https://github.com/Sidak-Rana">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/srana907">LinkedIn</a></li>
+    </ul>
+  </div>
+</footer>
+
+</body>
+</html>
