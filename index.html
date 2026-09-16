@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sidak Rana</title>
-<meta name="description" content="Sidak Rana — computer science student at Stony Brook University. Software, embedded hardware, and tools for markets.">
+<meta name="description" content="Sidak Rana — computer science student at Stony Brook University. Software, embedded systems, and tools for markets.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
@@ -46,7 +46,7 @@
   .masthead a:focus-visible{outline-color:var(--navy-text)}
   .mast-grid{display:grid;grid-template-columns:1fr;gap:2rem;align-items:center}
   @media (min-width:700px){.mast-grid{grid-template-columns:auto 1fr;gap:3rem}}
-  .photo{width:min(11.5rem,40vw);aspect-ratio:4/5;object-fit:cover;object-position:center top;display:block;background:#1E2F4A}
+  .photo{width:min(11.5rem,40vw);aspect-ratio:1;border-radius:50%;object-fit:cover;object-position:center 18%;display:block;background:#1E2F4A}
   h1{font-size:clamp(2.4rem,5.5vw,3.6rem);font-weight:600;line-height:1.05;letter-spacing:-.02em;margin:0 0 .6rem}
   .one-line{font-size:clamp(1.1rem,2.2vw,1.3rem);line-height:1.45;max-width:36ch;margin:0 0 1.1rem}
   .mast-meta{color:var(--navy-meta);font-size:.95rem;margin:0 0 1.4rem}
@@ -92,12 +92,11 @@
 
 <header class="masthead">
   <div class="wrap mast-grid">
-    <img class="photo" src="assets/photo.jpg" alt="Sidak Rana" width="184" height="230">
+    <img class="photo" src="assets/photo.jpg" alt="Sidak Rana" width="184" height="184">
     <div>
       <h1>Sidak Rana</h1>
       <p class="one-line">
-        Computer science student at Stony Brook University. I build software,
-        embedded hardware, and tools for markets.
+        Computer science student at Stony Brook University. I built a portfolio dashboard that survives a flaky market-data API, and a clock from a bare board up.
       </p>
       <p class="mast-meta sans">
         Stony Brook, NY. Class of 2029. Seeking a Summer 2027 internship in
@@ -133,8 +132,7 @@
       <p>
         Prices fall back through <code>currentPrice</code>,
         <code>regularMarketPrice</code>, and <code>navPrice</code>, so the
-        app keeps working when yfinance returns partial data. Deployed on
-        Streamlit Cloud; a push to the tracked branch redeploys it.
+        app keeps working when yfinance returns partial data. Deployed on Streamlit Cloud.
       </p>
       <ul class="links sans">
         <li><a href="https://portfolio-dashboard-app.streamlit.app">Live app</a></li>
@@ -177,22 +175,24 @@
   </article>
 </section>
 
-<section id="also" class="prose">
-  <h2>Also</h2>
+<section id="background" class="prose">
+  <h2>Background</h2>
   <p>
-    I'm Secretary of Brook Bhangra and a core organizer of Brook Naal
-    Bhangra 2027, Stony Brook's first intercollegiate bhangra competition
-    — two days, eight competing teams. I own records and scoring and built
-    the application and verification workflow the e-board runs on. I also
-    dance with the team.
+    I'm Secretary of Brook Bhangra, a competitive dance team at Stony Brook
+    University. I dance with the team, handle records and communications,
+    and keep the e-board's tracking and deadlines organized. I'm also a core
+    organizer of Brook Naal Bhangra 2027, Stony Brook's first intercollegiate bhangra
+    competition, two days and eight competing teams. I built the judge, team, liaison,
+    and staff applications, the application packet and verification workflow, and the
+    tracking sheets the e-board runs deadlines off. 
   </p>
   <p>
-    B.S. Computer Science, minor in Finance, Stony Brook University.
-    Dean's List both semesters so far. Google AI Professional Certificate, 2026.
+    B.S. in Engineering &amp; Applied Sciences at Stony Brook University, on the Computer Science track. Finance minor intended. 
+    Dean's List both semesters so far.
   </p>
   <p>
-    From New Hyde Park, New York. English and Punjabi; working Spanish and
-    Hindi. Outside of school I lift, run, and play Spikeball.
+    From New Hyde Park, New York. English and Punjabi, Spanish with the New York State Seal of Biliteracy, and some Hindi. 
+    Outside of school, I lift, run, and play Spikeball.
   </p>
 </section>
 
