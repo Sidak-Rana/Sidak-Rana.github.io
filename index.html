@@ -4,208 +4,353 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sidak Rana</title>
-<meta name="description" content="Sidak Rana — computer science student at Stony Brook University. Software, embedded systems, and tools for markets.">
+<meta name="description" content="Sidak Rana, computer science student at Stony Brook University. Software, embedded systems, and tools for markets.">
+<meta property="og:title" content="Sidak Rana">
+<meta property="og:description" content="CS student at Stony Brook. A portfolio dashboard that survives a flaky market-data API, and a clock from a bare board up.">
+<meta property="og:image" content="https://sidak-rana.github.io/assets/dashboard.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#F8F7F4;
-    --navy:#14233A;
-    --navy-text:#EEF0F3;
-    --navy-meta:#A9B3C2;
-    --text:#24272B;
-    --meta:#6A6E74;
-    --rule:#DDDBD5;
-    --burgundy:#7A1F2E;
+    --paper:#F2F4F7;
+    --surface:#FFFFFF;
+    --ink:#0E1A2B;
+    --muted:#566273;
+    --rule:#D6DCE4;
+    --signal:#2D5BFF;      /* the blue glow under the ESE 123 board */
+    --panel:#101A2C;       /* smoked-glass clock face */
+    --seg-on:#EAF2FF;
+    --seg-off:rgba(234,242,255,.07);
+    --radius-s:6px;
+    --radius-l:14px;
   }
   *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
+  html{scroll-behavior:smooth;scroll-padding-top:4.5rem}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
   body{
-    margin:0;
-    background:var(--paper);
-    color:var(--text);
-    font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
-    font-size:17.5px;
-    line-height:1.6;
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;
+    font-optical-sizing:auto;font-size:18px;line-height:1.55;
     -webkit-font-smoothing:antialiased;
   }
-  .sans{font-family:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif}
-
-  a{color:var(--burgundy);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+  img{max-width:100%;display:block}
+  a{color:var(--signal);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
   a:hover{text-decoration-thickness:2px}
-  a:focus-visible{outline:2px solid var(--burgundy);outline-offset:3px;border-radius:2px}
+  :focus-visible{outline:2px solid var(--signal);outline-offset:3px;border-radius:3px}
+  code{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.82em;background:#E6EAF0;padding:.1em .35em;border-radius:4px}
 
-  .wrap{width:min(100% - 2.5rem,66rem);margin-inline:auto}
+  .wrap{width:min(100% - 2rem,70rem);margin-inline:auto}
 
-  /* masthead */
-  .masthead{background:var(--navy);color:var(--navy-text);padding:clamp(2.5rem,6vw,4.5rem) 0}
-  .masthead a{color:var(--navy-text)}
-  .masthead a:focus-visible{outline-color:var(--navy-text)}
-  .mast-grid{display:grid;grid-template-columns:1fr;gap:2rem;align-items:center}
-  @media (min-width:700px){.mast-grid{grid-template-columns:auto 1fr;gap:3rem}}
-  .photo{width:min(11.5rem,40vw);aspect-ratio:1;border-radius:50%;object-fit:cover;object-position:center 18%;display:block;background:#1E2F4A}
-  h1{font-size:clamp(2.4rem,5.5vw,3.6rem);font-weight:600;line-height:1.05;letter-spacing:-.02em;margin:0 0 .6rem}
-  .one-line{font-size:clamp(1.1rem,2.2vw,1.3rem);line-height:1.45;max-width:36ch;margin:0 0 1.1rem}
-  .mast-meta{color:var(--navy-meta);font-size:.95rem;margin:0 0 1.4rem}
-  .links{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;padding:0;margin:0;list-style:none;font-size:.98rem}
+  /* top bar */
+  .bar{position:sticky;top:0;z-index:10;background:rgba(242,244,247,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid transparent;transition:border-color .2s}
+  .bar.scrolled{border-bottom-color:var(--rule)}
+  .bar .wrap{display:flex;align-items:center;justify-content:space-between;height:3.75rem}
+  .mark{font-weight:700;font-size:1.05rem;letter-spacing:-.01em;color:var(--ink);text-decoration:none}
+  .bar nav{display:flex;gap:1.5rem;font-size:.95rem}
+  .bar nav a{color:var(--muted);text-decoration:none}
+  .bar nav a:hover{color:var(--ink)}
 
-  /* work */
-  main{padding:0 0 1rem}
-  section{padding:clamp(2.4rem,5vw,3.6rem) 0}
-  section + section{border-top:1px solid var(--rule)}
-  h2{font-size:1.5rem;font-weight:600;letter-spacing:-.01em;margin:0 0 2rem}
+  /* hero */
+  .hero{padding:clamp(2.5rem,7vw,5.5rem) 0 clamp(3rem,7vw,5rem)}
+  .hero-grid{display:grid;gap:clamp(2rem,5vw,4rem);align-items:center}
+  @media (min-width:900px){.hero-grid{grid-template-columns:1.05fr 1fr}}
+  h1{font-size:clamp(3.2rem,9vw,6.2rem);font-weight:800;line-height:.92;letter-spacing:-.045em;margin:0 0 1.4rem;font-variation-settings:"opsz" 96}
+  .lede{font-size:clamp(1.2rem,2.3vw,1.45rem);line-height:1.4;font-weight:400;max-width:30ch;margin:0 0 1.25rem}
+  .status{display:inline-flex;align-items:center;gap:.6rem;font-size:.95rem;color:var(--muted);margin:0 0 1.75rem}
+  .status::before{content:"";flex-shrink:0;width:.55rem;height:.55rem;border-radius:50%;background:var(--signal);box-shadow:0 0 0 4px rgba(45,91,255,.15)}
+  .actions{display:flex;flex-wrap:wrap;gap:.6rem;padding:0;margin:0;list-style:none}
+  .btn{display:inline-block;padding:.6rem 1rem;border-radius:var(--radius-s);font-size:.95rem;font-weight:600;text-decoration:none;border:1.5px solid var(--ink);color:var(--ink)}
+  .btn:hover{background:var(--ink);color:var(--paper)}
+  .btn.primary{background:var(--ink);color:var(--paper)}
+  .btn.primary:hover{background:var(--signal);border-color:var(--signal)}
 
-  .project{
-    display:grid;grid-template-columns:1fr;gap:1.4rem 3rem;align-items:start;
-    padding:0 0 3rem;
-  }
+  /* the clock */
+  .display{background:var(--panel);border-radius:var(--radius-l);padding:clamp(1.4rem,3vw,2rem);color:#AFC0DA;box-shadow:0 30px 60px -30px rgba(16,26,44,.55)}
+  .face{position:relative;padding:clamp(1rem,3vw,1.75rem) clamp(.75rem,2vw,1.25rem);border-radius:10px;background:linear-gradient(180deg,#0B1322,#152238);border:1px solid rgba(255,255,255,.06)}
+  .face::after{content:"";position:absolute;left:12%;right:12%;bottom:-1px;height:2px;background:var(--signal);filter:blur(6px);opacity:.8}
+  .digits{display:flex;align-items:center;justify-content:center;gap:clamp(.3rem,1.2vw,.7rem)}
+  .digit{width:clamp(3rem,9vw,4.6rem);height:auto}
+  .digit polygon{fill:var(--seg-off);transition:fill .06s}
+  .digit polygon.on{fill:var(--seg-on);filter:drop-shadow(0 0 5px rgba(120,160,255,.65))}
+  .digit.dark polygon.on{fill:var(--seg-off);filter:none}
+  .colon{display:flex;flex-direction:column;gap:clamp(.9rem,2.6vw,1.4rem)}
+  .colon i{display:block;width:clamp(.45rem,1.2vw,.6rem);aspect-ratio:1;border-radius:2px;background:var(--seg-on);box-shadow:0 0 8px rgba(120,160,255,.7)}
+  .colon.off i{background:var(--seg-off);box-shadow:none}
+  .ampm{display:flex;flex-direction:column;gap:.35rem;margin-left:.35rem;font-family:"JetBrains Mono",monospace;font-size:.7rem}
+  .ampm span{color:rgba(234,242,255,.18)}
+  .ampm span.on{color:var(--seg-on);text-shadow:0 0 6px rgba(120,160,255,.8)}
+  .readout{display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem 1rem;margin:1.1rem 0 0;font-family:"JetBrains Mono",monospace;font-size:.8rem;color:#8EA1BF}
+  .readout b{color:var(--seg-on);font-weight:500}
+  .display p{margin:1rem 0 0;font-size:.95rem;line-height:1.5}
+  .scan{margin-top:1rem;background:transparent;color:var(--seg-on);border:1px solid rgba(234,242,255,.3);border-radius:var(--radius-s);padding:.5rem .85rem;font:inherit;font-size:.9rem;cursor:pointer}
+  .scan:hover{border-color:var(--seg-on)}
+  .scan[aria-pressed="true"]{background:var(--signal);border-color:var(--signal)}
+
+  /* sections */
+  section{padding:clamp(3rem,7vw,5.5rem) 0}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin:0 0 clamp(2rem,4vw,3rem);padding-bottom:1rem;border-bottom:2px solid var(--ink)}
+  h2{font-size:clamp(1.9rem,4vw,2.6rem);font-weight:750;letter-spacing:-.03em;line-height:1;margin:0}
+  .sec-head p{margin:0;color:var(--muted);font-size:.95rem}
+
+  /* projects */
+  .project{display:grid;gap:1.5rem clamp(2rem,4vw,3.5rem);align-items:start;padding-bottom:clamp(3rem,6vw,4.5rem)}
+  @media (min-width:860px){.project{grid-template-columns:7fr 5fr}}
   .project:last-child{padding-bottom:0}
-  @media (min-width:820px){.project{grid-template-columns:7fr 5fr}}
+  .shot{background:var(--surface);border:1px solid var(--rule);border-radius:var(--radius-l);padding:.6rem;overflow:hidden}
+  .shot img{border-radius:8px;width:100%;height:auto}
+  .shot.pair{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+  .shot.pair img{aspect-ratio:1;object-fit:cover}
+  h3{font-size:1.6rem;font-weight:700;letter-spacing:-.02em;line-height:1.15;margin:0 0 .35rem}
+  .when{color:var(--muted);font-size:.95rem;margin:0 0 .9rem}
+  .project p{margin:0 0 .9rem;max-width:52ch}
+  .tags{display:flex;flex-wrap:wrap;gap:.4rem;padding:0;margin:0 0 1.1rem;list-style:none}
+  .tags li{font-size:.8rem;font-weight:500;padding:.2rem .55rem;border:1px solid var(--rule);border-radius:999px;color:var(--muted);background:var(--surface)}
+  .bug{margin:1.1rem 0;padding:.9rem 1rem;border-left:3px solid var(--signal);background:var(--surface);border-radius:0 var(--radius-s) var(--radius-s) 0}
+  .bug strong{display:block;font-size:.9rem;margin-bottom:.25rem}
+  .bug p{margin:0;font-size:.97rem}
+  .links{display:flex;flex-wrap:wrap;gap:.6rem;padding:0;margin:0;list-style:none}
+  .project.small{grid-template-columns:1fr;max-width:46rem;padding-top:clamp(1.5rem,3vw,2rem);border-top:1px solid var(--rule)}
 
-  .shots{display:grid;gap:.9rem}
-  .shots img{width:100%;height:auto;display:block;border:1px solid var(--rule)}
-  .shots.pair{grid-template-columns:1fr 1fr}
-  @media (max-width:480px){.shots.pair{grid-template-columns:1fr}}
-
-  h3{font-size:1.25rem;font-weight:600;margin:0 0 .2rem}
-  .meta{color:var(--meta);font-size:.95rem;margin:0 0 .8rem}
-  .project p{margin:0 0 .75rem;max-width:56ch}
-  .project p:last-child{margin-bottom:0}
-  .project .links{margin-top:.9rem;font-size:.95rem}
-
-  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.88em;background:#EDEBE6;padding:.05em .3em;border-radius:2px}
-
-  /* short sections */
-  .prose p{max-width:64ch;margin:0 0 .8rem}
-  .prose p:last-child{margin-bottom:0}
+  /* off the keyboard */
+  .naal{display:grid;gap:2rem clamp(2rem,4vw,3.5rem);align-items:start;margin-bottom:clamp(3rem,6vw,4.5rem)}
+  @media (min-width:860px){.naal{grid-template-columns:5fr 7fr}}
+  .naal p{margin:0 0 .9rem;max-width:56ch}
+  .facts{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:var(--radius-l);overflow:hidden;margin:0}
+  .facts div{background:var(--surface);padding:1.2rem 1rem}
+  .facts dt{font-size:clamp(2.2rem,5vw,3.2rem);font-weight:800;letter-spacing:-.04em;line-height:1}
+  .facts dd{margin:.4rem 0 0;color:var(--muted);font-size:.9rem;line-height:1.35}
+  .about{display:grid;gap:2rem clamp(2rem,4vw,3.5rem);align-items:center}
+  @media (min-width:760px){.about{grid-template-columns:minmax(14rem,4fr) 8fr}}
+  .portrait{border-radius:var(--radius-l);aspect-ratio:4/5;height:auto;object-fit:cover;object-position:center 20%;width:100%;max-width:22rem}
+  .about p{margin:0 0 .9rem;max-width:58ch}
+  .about ul{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:.9rem 1.5rem;padding:0;margin:1.4rem 0 0;list-style:none}
+  .about li{border-top:1px solid var(--rule);padding-top:.6rem;font-size:.95rem}
+  .about li span{display:block;color:var(--muted);font-size:.85rem}
 
   /* footer */
-  footer{background:var(--navy);color:var(--navy-text);padding:2.6rem 0}
-  footer a{color:var(--navy-text)}
-  footer p{margin:0 0 1rem;max-width:60ch}
+  footer{background:var(--ink);color:#E4E9F1;padding:clamp(3rem,7vw,5rem) 0 2rem}
+  footer h2{font-size:clamp(2rem,5vw,3.4rem);max-width:18ch;margin-bottom:1.5rem}
+  footer .btn{border-color:#E4E9F1;color:#E4E9F1}
+  footer .btn:hover{background:#E4E9F1;color:var(--ink)}
+  footer .btn.primary{background:#E4E9F1;color:var(--ink)}
+  footer .btn.primary:hover{background:var(--signal);border-color:var(--signal);color:#fff}
+  .fine{margin:3rem 0 0;color:#8592A6;font-size:.85rem}
+
+  @media (max-width:520px){
+    .bar nav{gap:1rem;font-size:.9rem}
+    .facts{grid-template-columns:1fr}
+    .facts div{display:flex;align-items:baseline;gap:1rem}
+  }
 </style>
 </head>
 <body>
 
-<header class="masthead">
-  <div class="wrap mast-grid">
-    <img class="photo" src="assets/photo.jpg" alt="Sidak Rana" width="184" height="184">
-    <div>
-      <h1>Sidak Rana</h1>
-      <p class="one-line">
-        Computer science student at Stony Brook University. I built a portfolio dashboard that survives a flaky market-data API, and a clock from a bare board up.
-      </p>
-      <p class="mast-meta sans">
-        Stony Brook, NY. Class of 2029. Seeking a Summer 2027 internship in
-        software, embedded systems, or fintech.
-      </p>
-      <ul class="links sans">
-        <li><a href="mailto:ranasidak@gmail.com">ranasidak@gmail.com</a></li>
-        <li><a href="https://github.com/Sidak-Rana">GitHub</a></li>
-        <li><a href="https://www.linkedin.com/in/srana907">LinkedIn</a></li>
-        <li><a href="assets/Sidak_Rana_Resume.pdf">Resume</a></li>
-      </ul>
-    </div>
+<header class="bar" id="top">
+  <div class="wrap">
+    <a class="mark" href="#top">Sidak Rana</a>
+    <nav aria-label="Sections">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="assets/Sidak_Rana_Resume.pdf">Resume</a>
+    </nav>
   </div>
 </header>
 
-<main class="wrap">
-
-<section id="work">
-  <h2>Work</h2>
-
-  <article class="project">
-    <div class="shots">
-      <img src="assets/dashboard.png" alt="Stock Portfolio Dashboard — table view with cost basis, total value, and top and bottom performers" width="974" height="637">
-    </div>
+<main>
+<section class="hero" aria-labelledby="name">
+  <div class="wrap hero-grid">
     <div>
-      <h3>Stock Portfolio Dashboard</h3>
-      <p class="meta sans">June 2026. Python, Streamlit, pandas, Plotly, yfinance.</p>
-      <p>
-        Live portfolio tracking: gain/loss, percent return, and total value
-        across holdings, with a returns view per ticker and a distribution
-        view showing sector allocation and a correlation heatmap.
-      </p>
-      <p>
-        Prices fall back through <code>currentPrice</code>,
-        <code>regularMarketPrice</code>, and <code>navPrice</code>, so the
-        app keeps working when yfinance returns partial data. Deployed on Streamlit Cloud.
-      </p>
-      <ul class="links sans">
-        <li><a href="https://portfolio-dashboard-app.streamlit.app">Live app</a></li>
-        <li><a href="https://github.com/Sidak-Rana/Stock-Portfolio-Dashboard">Source</a></li>
+      <h1 id="name">Sidak<br>Rana</h1>
+      <p class="lede">CS student at Stony Brook. I built a portfolio dashboard that survives a flaky market-data API, and a clock from a bare board up.</p>
+      <p class="status">Looking for a Summer 2027 internship in software, embedded systems, or fintech</p>
+      <ul class="actions">
+        <li><a class="btn primary" href="mailto:ranasidak@gmail.com">Email me</a></li>
+        <li><a class="btn" href="https://github.com/Sidak-Rana">GitHub</a></li>
+        <li><a class="btn" href="https://www.linkedin.com/in/srana907">LinkedIn</a></li>
+        <li><a class="btn" href="assets/Sidak_Rana_Resume.pdf">Resume</a></li>
       </ul>
     </div>
-  </article>
 
-  <article class="project">
-    <div class="shots pair">
-      <img src="assets/clock-board.jpg" alt="The clock's circuit board on the bench, with the ATmega4809 and seven-segment display mounted" width="800" height="804">
-      <img src="assets/clock.jpg" alt="The finished clock in its enclosure, reading 5:00" width="800" height="600">
-    </div>
-    <div>
-      <h3>Embedded Digital Clock</h3>
-      <p class="meta sans">Jan–Apr 2026. C, AVR assembly, ATmega4809.</p>
-      <p>
-        Soldered and assembled the board, then wrote the firmware in C:
-        a multiplexed seven-segment display, an RTC, 24-to-12-hour
-        conversion, and button-driven hour and minute setting.
-      </p>
-      <p>
-        A set-minutes loop was being skipped when the button was still held
-        from the previous press. Fixed by waiting for release before
-        advancing state.
-      </p>
-    </div>
-  </article>
-
-  <article class="project">
-    <div class="shots"></div>
-    <div>
-      <h3>Stock Report Generator</h3>
-      <p class="meta sans">2024, with a partner. Python.</p>
-      <p>
-        Takes a ticker and produces a PDF report: historical price table,
-        color-coded price chart, and recent headlines.
-      </p>
-    </div>
-  </article>
+    <figure class="display" style="margin:0" aria-label="Live seven-segment clock showing New York time">
+      <div class="face">
+        <div class="digits" id="digits" aria-hidden="true"></div>
+      </div>
+      <div class="readout" aria-live="off">
+        <span>hour24 = <b id="h24">--</b> &rarr; <b id="h12">--</b> <b id="mer">--</b></span>
+        <span>New York</span>
+      </div>
+      <p>Live in your browser, using the same 24-to-12-hour logic I wrote in C for my ATmega4809 clock.</p>
+      <button class="scan" id="scan" type="button" aria-pressed="false">Slow down the multiplexing</button>
+      <p id="scan-note" hidden>Only one digit is ever lit. The firmware cycles through them so fast your eye blends them into one steady time.</p>
+    </figure>
+  </div>
 </section>
 
-<section id="background" class="prose">
-  <h2>Background</h2>
-  <p>
-    I'm on the Computer Science track at Stony Brook University's College of Engineering and Applied Sciences 
-    with a Finance minor intended; my work with financial markets comes from there. I've also been on the Dean's List
-    both semesters so far.
-  </p>
-  <p>
-    Outside of coursework, I'm Secretary of Brook Bhangra, a competitive dance team, and a core organizer of Brook
-    Naal Bhangra 2027 — the university's first intercollegiate bhangra competition, two days, eight teams. I built the applications 
-    for judges, teams, liaisons, and staff, and the verification workflow behind them. I also handle the sheets and information 
-    that the e-board runs off of. It's the closest thing I have to shipping something people depend on. I dance with the team too.
-  </p>
-  <p>
-    I'm from New Hyde Park, New York. I speak English and Punjabi fluently; I have the New York State Seal of Biliteracy in Spanish, 
-    and a working knowledge of Hindi. Outside of school, I lift, run, and play Spikeball. 
-  </p>
+<section id="work" aria-labelledby="work-h">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="work-h">Work</h2><p>Three projects, newest first</p></div>
+
+    <article class="project">
+      <div class="shot">
+        <img src="assets/dashboard.png" alt="Stock Portfolio Dashboard table view with cost basis, total value, and top and bottom performers" width="974" height="637" loading="lazy">
+      </div>
+      <div>
+        <h3>Stock Portfolio Dashboard</h3>
+        <p class="when">June 2026, solo</p>
+        <ul class="tags"><li>Python</li><li>Streamlit</li><li>pandas</li><li>Plotly</li><li>yfinance</li></ul>
+        <p>Tracks gain/loss, percent return, and total value across a portfolio. Three views: a holdings table, per-ticker returns, and a distribution view with sector allocation and a correlation heatmap.</p>
+        <p>The data layer and the Streamlit UI live in separate modules, and every push to GitHub redeploys the live app on Streamlit Cloud.</p>
+        <div class="bug">
+          <strong>What broke</strong>
+          <p>yfinance sometimes returns partial data, which blanked out prices. Now each price falls back through <code>currentPrice</code>, <code>regularMarketPrice</code>, then <code>navPrice</code>.</p>
+        </div>
+        <ul class="links">
+          <li><a class="btn primary" href="https://portfolio-dashboard-app.streamlit.app">Open live app</a></li>
+          <li><a class="btn" href="https://github.com/Sidak-Rana/Stock-Portfolio-Dashboard">View code</a></li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="project">
+      <div class="shot pair">
+        <img src="assets/clock-board.jpg" alt="The clock's circuit board in the ESE 123 lab fixture, with the ATmega4809 and seven-segment display" width="800" height="804" loading="lazy">
+        <img src="assets/clock.jpg" alt="The finished clock in its enclosure, reading 5:00" width="800" height="600" loading="lazy">
+      </div>
+      <div>
+        <h3>Embedded Digital Clock</h3>
+        <p class="when">Jan to Apr 2026, ESE 123</p>
+        <ul class="tags"><li>C</li><li>AVR assembly</li><li>ATmega4809</li><li>Soldering</li></ul>
+        <p>I soldered and assembled the board, then wrote the firmware: a multiplexed seven-segment display, an RTC, 24-to-12-hour conversion, and button-driven hour and minute setting.</p>
+        <p>Writing C for a microcontroller was nothing like Python or Java. Every line drives the hardware directly.</p>
+        <div class="bug">
+          <strong>What broke</strong>
+          <p>The set-minutes loop got skipped whenever the button was still held from the last press. I fixed it by waiting for release before advancing state.</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="project small">
+      <div>
+        <h3>Stock Report Generator</h3>
+        <p class="when">2024, with a partner</p>
+        <ul class="tags"><li>Python</li></ul>
+        <p>Takes a ticker and produces a PDF report with a historical price table, a color-coded price chart, and recent headlines.</p>
+      </div>
+    </article>
+  </div>
 </section>
 
+<section id="about" aria-labelledby="about-h">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="about-h">Off the keyboard</h2><p>Stony Brook, Class of 2029</p></div>
+
+    <div class="naal">
+      <div>
+        <h3>Brook Naal Bhangra 2027</h3>
+        <p class="when">Secretary, Brook Bhangra</p>
+        <p>I'm a core organizer of Stony Brook's first intercollegiate bhangra competition. I built the applications for judges, teams, liaisons, and staff, plus the verification workflow behind them, and I run the sheets the e-board works from.</p>
+        <p>It's the closest thing I have to shipping something people depend on. I dance with the team too.</p>
+      </div>
+      <dl class="facts">
+        <div><dt>2</dt><dd>days of competition</dd></div>
+        <div><dt>8</dt><dd>competing teams</dd></div>
+        <div><dt>4</dt><dd>application flows I built</dd></div>
+      </dl>
+    </div>
+
+    <div class="about">
+      <img class="portrait" src="assets/photo.jpg" alt="Sidak Rana" width="880" height="1100" loading="lazy">
+      <div>
+        <p>I'm on the Computer Science track at Stony Brook's College of Engineering and Applied Sciences, with an intended Finance minor. That's where the markets side of my projects comes from. Dean's List both semesters so far.</p>
+        <p>I'm from New Hyde Park, New York. When I'm not coding or at practice, I'm lifting, running, or playing Spikeball.</p>
+        <ul>
+          <li><span>Languages</span>English and Punjabi, fluent. Spanish, NYS Seal of Biliteracy. Working Hindi.</li>
+          <li><span>Also</span>Cabinet member, South Asian Student Association</li>
+          <li><span>Interested in</span>Where hardware, software, and markets meet</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
 </main>
 
 <footer>
   <div class="wrap">
-    <p>Hiring for Summer 2027, or want to talk embedded systems or markets? Get in touch.</p>
-    <ul class="links sans">
-      <li><a href="mailto:ranasidak@gmail.com">ranasidak@gmail.com</a></li>
-      <li><a href="https://github.com/Sidak-Rana">GitHub</a></li>
-      <li><a href="https://www.linkedin.com/in/srana907">LinkedIn</a></li>
+    <h2>Hiring for Summer 2027? Let's talk.</h2>
+    <ul class="actions">
+      <li><a class="btn primary" href="mailto:ranasidak@gmail.com">ranasidak@gmail.com</a></li>
+      <li><a class="btn" href="https://github.com/Sidak-Rana">GitHub</a></li>
+      <li><a class="btn" href="https://www.linkedin.com/in/srana907">LinkedIn</a></li>
+      <li><a class="btn" href="assets/Sidak_Rana_Resume.pdf">Resume</a></li>
     </ul>
+    <p class="fine">Built by hand. The clock up top runs the same logic as the real one.</p>
   </div>
 </footer>
 
+<script>
+(() => {
+  // Segment order: a b c d e f g
+  const SEG = {
+    a:"14,4 54,4 46,12 22,12", b:"56,6 56,46 48,40 48,14", c:"56,54 56,94 48,86 48,60",
+    d:"14,96 54,96 46,88 22,88", e:"12,54 20,60 20,86 12,94", f:"12,6 20,14 20,40 12,46",
+    g:"16,50 22,45 46,45 52,50 46,55 22,55"
+  };
+  const MAP = {0:"abcdef",1:"bc",2:"abged",3:"abgcd",4:"fgbc",5:"afgcd",6:"afgedc",7:"abc",8:"abcdefg",9:"abcfgd"," ":""};
+  const box = document.getElementById("digits");
+  const mk = () => {
+    const s = document.createElementNS("http://www.w3.org/2000/svg","svg");
+    s.setAttribute("viewBox","0 0 68 100"); s.classList.add("digit");
+    for (const k in SEG){ const p=document.createElementNS(s.namespaceURI,"polygon"); p.setAttribute("points",SEG[k]); p.dataset.s=k; s.appendChild(p); }
+    return s;
+  };
+  const d = [mk(), mk()], colon = document.createElement("div"), d2 = [mk(), mk()];
+  colon.className = "colon"; colon.innerHTML = "<i></i><i></i>";
+  const ampm = document.createElement("div"); ampm.className="ampm"; ampm.innerHTML='<span id="am">AM</span><span id="pm">PM</span>';
+  box.append(d[0], d[1], colon, d2[0], d2[1], ampm);
+  const digits = [d[0], d[1], d2[0], d2[1]];
+
+  const show = (el, ch) => { const on = MAP[ch] || ""; el.querySelectorAll("polygon").forEach(p => p.classList.toggle("on", on.includes(p.dataset.s))); };
+
+  const fmt = new Intl.DateTimeFormat("en-US",{timeZone:"America/New_York",hour:"numeric",minute:"2-digit",second:"2-digit",hourCycle:"h23"});
+  let chars = [" "," "," "," "];
+  function tick(){
+    const parts = Object.fromEntries(fmt.formatToParts(new Date()).map(p=>[p.type,p.value]));
+    const h24 = parseInt(parts.hour,10), m = parts.minute, s = parseInt(parts.second,10);
+    // 24-to-12-hour conversion, as on the ATmega4809
+    let h12 = h24 % 12; if (h12 === 0) h12 = 12;
+    const pm = h24 >= 12;
+    chars = [h12 >= 10 ? "1" : " ", String(h12 % 10), m[0], m[1]];
+    if (!scanning) digits.forEach((el,i)=>{ el.classList.remove("dark"); show(el, chars[i]); });
+    colon.classList.toggle("off", s % 2 === 1);
+    document.getElementById("am").classList.toggle("on", !pm);
+    document.getElementById("pm").classList.toggle("on", pm);
+    document.getElementById("h24").textContent = String(h24).padStart(2,"0");
+    document.getElementById("h12").textContent = h12;
+    document.getElementById("mer").textContent = pm ? "PM" : "AM";
+  }
+
+  // Multiplexing demo: light one digit at a time, slowly
+  let scanning = false, scanTimer = null, idx = 0;
+  const btn = document.getElementById("scan"), note = document.getElementById("scan-note");
+  btn.addEventListener("click", () => {
+    scanning = !scanning;
+    btn.setAttribute("aria-pressed", scanning);
+    btn.textContent = scanning ? "Back to full speed" : "Slow down the multiplexing";
+    note.hidden = !scanning;
+    clearInterval(scanTimer);
+    if (scanning){
+      const step = () => { digits.forEach((el,i)=>{ show(el, chars[i]); el.classList.toggle("dark", i !== idx); }); idx = (idx+1) % 4; };
+      step(); scanTimer = setInterval(step, 280);
+    } else tick();
+  });
+
+  tick(); setInterval(tick, 1000);
+
+  const bar = document.querySelector(".bar");
+  addEventListener("scroll", () => bar.classList.toggle("scrolled", scrollY > 8), {passive:true});
+})();
+</script>
 </body>
 </html>
