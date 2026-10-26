@@ -6,7 +6,7 @@
 <title>Sidak Rana</title>
 <meta name="description" content="Sidak Rana, computer science student at Stony Brook University. Software, embedded systems, and tools for markets.">
 <meta property="og:title" content="Sidak Rana">
-<meta property="og:description" content="CS student at Stony Brook. A portfolio dashboard that survives a flaky market-data API, and a clock from a bare board up.">
+<meta property="og:description" content="CS student at Stony Brook. I built the dashboard for a wireless study pet, a portfolio dashboard that survives a flaky market-data API, and a clock from a bare board up.">
 <meta property="og:image" content="https://sidak-rana.github.io/assets/dashboard.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -163,7 +163,7 @@
   <div class="wrap hero-grid">
     <div>
       <h1 id="name">Sidak<br>Rana</h1>
-      <p class="lede">CS student at Stony Brook. I built a portfolio dashboard that survives a flaky market-data API, and a clock from a bare board up.</p>
+      <p class="lede">CS student at Stony Brook. I built the dashboard for a wireless study pet, a portfolio dashboard that survives a flaky market-data API, and a clock from a bare board up.</p>
       <p class="status">Looking for a Summer 2027 internship in software, embedded systems, or fintech</p>
       <ul class="actions">
         <li><a class="btn primary" href="mailto:ranasidak@gmail.com">Email me</a></li>
@@ -190,7 +190,33 @@
 
 <section id="work" aria-labelledby="work-h">
   <div class="wrap">
-    <div class="sec-head"><h2 id="work-h">Work</h2><p>Three projects, newest first</p></div>
+    <div class="sec-head"><h2 id="work-h">Work</h2><p>Four projects, newest first</p></div>
+
+    <article class="project">
+      <div>
+        <div class="shot">
+          <img src="assets/pomo-home.jpg" alt="Pomo dashboard home screen: a nixie-tube clock reading 12:13 AM, the pixel pet saying 'It's late. One short session, then sleep?', and the four-session cycle" width="1600" height="875" loading="lazy">
+        </div>
+        <div class="shot pair" style="margin-top:.6rem">
+          <img src="assets/pomo-boards.jpg" alt="Three Pomo builds: two breadboard prototypes and the palm-sized battery build with its screen on" width="800" height="800" loading="lazy">
+          <img src="assets/pomo-device.jpg" alt="The device screen greeting: 'Good evening, Sidak. Mochi missed you.'" width="800" height="800" loading="lazy">
+        </div>
+      </div>
+      <div>
+        <h3>Pomo: a study pet that grows when you focus</h3>
+        <p class="when">Oct 2026, SBU Hacks, team of four. Frontend and UI/UX lead</p>
+        <ul class="tags"><li>JavaScript</li><li>HTML/CSS</li><li>Web Serial</li><li>ESP32</li><li>Python</li></ul>
+        <p>An ESP32 desk pet that hides the clock, notices when you drift to YouTube or TikTok, and only levels up when you actually study. Friends with their own Pomo earn a shared bonus, but only while everyone stays focused.</p>
+        <p>I designed and built the laptop dashboard: hand-drawn SVG nixie tubes, a punched time card for every session, a talking home screen, and live two-way sync with the device over USB and Bluetooth. The device owns the timer and XP, so the screen can never disagree with the pet on your desk.</p>
+        <div class="bug">
+          <strong>What broke</strong>
+          <p>Over Bluetooth on Windows, the dashboard said the device was on USB. Windows presents a paired Bluetooth device as a plain COM port with no IDs. Now a port only counts as USB if it reports a USB vendor ID.</p>
+        </div>
+        <ul class="links">
+          <li><a class="btn" href="https://github.com/StudyWithPomo/Pomo-App">View code</a></li>
+        </ul>
+      </div>
+    </article>
 
     <article class="project">
       <div class="shot">
